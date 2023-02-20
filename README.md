@@ -19,17 +19,13 @@ To run this project, you will need to have the following installed on your syste
 
 To run the project in development mode, use the following command:
 
-    ```bash
     yarn dev
-    ```
 
 This will start the development server and enable hot-reloading of your code.
 
 To build the project for production, use the following command:
 
-        ```bash
-        yarn build
-        ```
+    yarn build
 
 This will compile your TypeScript code and generate a production-ready build in the `dist` directory.
 
