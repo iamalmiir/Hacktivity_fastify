@@ -16,12 +16,13 @@ app.use(session(CONFIG, app))
 
 // Passport authentication
 import passport from 'koa-passport'
+import './config/localAuthStrategy'
 app.use(passport.initialize())
 app.use(passport.session())
 
 // Routes from @routes
-import HomeRoutes from '@routes/index'
-app.use(HomeRoutes.routes())
+import auth from '@routes/auth'
+app.use(auth.routes())
 
 // Run the server
 const PORT = process.env.PORT || 3000
