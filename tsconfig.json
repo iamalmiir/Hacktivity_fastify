@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "noImplicitAny": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+
+    "baseUrl": "./src",
+    "paths": {
+      "@common/*": ["common/*"],
+      "@config/*": ["config/*"],
+      "@routes/*": ["routes/*"]
+    }
+  },
+  "exclude": ["node_modules", "prisma", "dist"]
+}
