@@ -1,6 +1,6 @@
 import prisma from '@common/db'
 
-import * as Router from 'koa-router'
+import Router from 'koa-router'
 const _ = new Router()
 
 _.get('/', async (ctx, next) => {

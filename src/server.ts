@@ -1,21 +1,21 @@
 import 'dotenv/config'
 
 // Koa server
-import * as Koa from 'koa'
+import Koa from 'koa'
 const app = new Koa()
 
 // Body parser
-import * as bodyParser from 'koa-bodyparser'
+import bodyParser from 'koa-bodyparser'
 app.use(bodyParser())
 
 // Session
 import { CONFIG } from '@common/constants'
 app.keys = [CONFIG.keys]
-import * as session from 'koa-session'
+import session from 'koa-session'
 app.use(session(CONFIG, app))
 
 // Passport authentication
-import * as passport from 'koa-passport'
+import passport from 'koa-passport'
 app.use(passport.initialize())
 app.use(passport.session())
 

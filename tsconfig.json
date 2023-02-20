@@ -5,6 +5,8 @@
     "noImplicitAny": true,
     "outDir": "./dist",
     "sourceMap": true,
+    "esModuleInterop": true,
+    "strict": true,
 
     "baseUrl": "./src",
     "paths": {
@@ -13,5 +15,6 @@
       "@routes/*": ["routes/*"]
     }
   },
-  "exclude": ["node_modules", "prisma", "dist"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
