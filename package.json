@@ -16,6 +16,7 @@
   "dependencies": {
     "@prisma/client": "^4.10.1",
     "bcryptjs": "^2.4.3",
+    "chalk": "^5.2.0",
     "dotenv": "^16.0.3",
     "joi": "^17.8.1",
     "koa": "^2.14.1",
