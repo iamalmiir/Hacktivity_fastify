@@ -40,16 +40,22 @@ passport.use(
         })
 
         if (!user) {
-          return done(null, false, { message: 'Incorrect email.' })
+          return done(null, false, {
+            message: "Uh oh, that did't work! Please check your info.",
+          })
         }
 
         if (!(await comparePassword(password, user.password))) {
-          return done(null, false, { message: 'Incorrect password.' })
+          return done(null, false, {
+            message: "Uh oh, that did't work! Please check your info.",
+          })
         }
 
         return done(null, user)
       } catch (error) {
-        return done(error)
+        return done(error, false, {
+          message: "Uh oh, that did't work! Please check your info.",
+        })
       }
     }
   )

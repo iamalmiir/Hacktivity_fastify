@@ -1,22 +1,19 @@
 import passport from 'koa-passport'
-
 import Router from 'koa-router'
+
 const _ = new Router()
 
-_.get('/', async (ctx, next) => {
-  ctx.body = {
-    data: 'Hello world!',
-  }
-
-  await next()
-})
-
 _.post(
-  '/auth/login',
-  passport.authenticate('local', { failureRedirect: '/login' }),
+  '/auth/local/login',
+  passport.authenticate('local', {
+    failureRedirect: '/failed/auth',
+  }),
   async (ctx, next) => {
-    ctx.body = {
-      data: ctx.state.user,
+    if (ctx.isAuthenticated()) {
+      ctx.body = {
+        success: true,
+        message: 'Successfully logged in',
+      }
     }
 
     await next()
@@ -24,10 +21,23 @@ _.post(
 )
 
 _.get('/logout', async (ctx, next) => {
-  ctx.logout()
-  ctx.redirect('/')
+  if (ctx.isAuthenticated()) {
+    ctx.logout()
+    ctx.body = {
+      success: true,
+      message: 'Successfully logged out',
+    }
+  }
 
   await next()
 })
 
+_.get('/failed/auth', async (ctx, next) => {
+  ctx.body = {
+    success: false,
+    message: 'Failed to authenticate',
+  }
+
+  await next()
+})
 export default _
