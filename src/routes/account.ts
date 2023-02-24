@@ -12,7 +12,7 @@ const _ = new Router()
   @body username: string
   @body email: string
   @body password: string
-
+  
 */
 _.post('/account/register', async (ctx, next) => {
   // If user is authenticated redirect them to /auth/user/me
@@ -81,6 +81,45 @@ _.post('/account/register', async (ctx, next) => {
       message: "Couldn't register user",
     }
   }
+  // Continue with the request
+  await next()
+})
+
+/*
+  * Delete account route
+  @DELETE /account/delete
+
+*/
+_.delete('/account/delete', async (ctx, next) => {
+  // Allow only authenticated users to access this route
+  if (!ctx.isAuthenticated()) {
+    ctx.redirect('/failed/auth')
+    return
+  }
+
+  try {
+    // Delete user from database
+    await prisma.user.delete({
+      where: {
+        id: ctx.state.user.id,
+      },
+    })
+
+    // Log user out
+    ctx.logout()
+
+    ctx.body = {
+      success: true,
+      message: 'Successfully deleted account',
+    }
+  } catch (err) {
+    // If something went wrong send error message to the client
+    ctx.body = {
+      success: false,
+      message: "Couldn't delete account",
+    }
+  }
+
   // Continue with the request
   await next()
 })
