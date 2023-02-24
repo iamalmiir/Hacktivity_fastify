@@ -6,7 +6,7 @@ const _ = new Router()
 
 /*
   * Register route
-  @GET /account/register
+  @POST /account/register
 
   @body name: string
   @body username: string
