@@ -7,6 +7,9 @@
   "version": "1.0.0",
   "description": "A social media platform for developers",
   "main": "server.js",
+  "prisma": {
+    "schema": "./src/prisma/schema.prisma"
+  },
   "scripts": {
     "build": "tsc",
     "prestart": "rm -rf dist && yarn build",

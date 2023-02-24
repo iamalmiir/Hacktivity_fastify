@@ -1,6 +1,6 @@
 import * as Joi from 'joi'
 
-export const register = Joi.object({
+export const registerValidator = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
@@ -9,7 +9,7 @@ export const register = Joi.object({
   name: Joi.string().required(),
 })
 
-export const login = Joi.object({
+export const loginValidator = Joi.object({
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
     .required(),

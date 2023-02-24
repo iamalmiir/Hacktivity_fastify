@@ -11,9 +11,11 @@
 
     "baseUrl": "./src",
     "paths": {
+      "@types/*": ["types/*"],
       "@common/*": ["common/*"],
       "@config/*": ["config/*"],
-      "@routes/*": ["routes/*"]
+      "@routes/*": ["routes/*"],
+      "@utils/*": ["libs/*"]
     }
   },
 

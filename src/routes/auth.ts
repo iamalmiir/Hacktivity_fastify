@@ -7,7 +7,6 @@ const _ = new Router()
 _.post(
   '/auth/local/login',
   passport.authenticate('local', {
-    // If authentication failed redirect to /failed/auth
     failureRedirect: '/failed/auth',
   }),
   async (ctx, next) => {

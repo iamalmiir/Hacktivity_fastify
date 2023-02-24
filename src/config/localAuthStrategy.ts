@@ -33,16 +33,16 @@ passport.deserializeUser(async (id: string, done) => {
 passport.use(
   new LocalStrategy(
     {
-      // Set username field to email
-      usernameField: 'email',
+      // Set username field to email or username
+      usernameField: 'username',
       passwordField: 'password',
     },
-    async (email, password, done) => {
+    async (username, password, done) => {
       try {
         // Find user in database by email
         const user = await prisma.user.findUnique({
           where: {
-            email,
+            username,
           },
         })
 

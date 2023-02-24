@@ -23,8 +23,10 @@ app.use(passport.session())
 // Routes from @routes
 import auth from '@routes/auth'
 import userRoutes from '@routes/user'
+import accountRoutes from '@routes/account'
 app.use(auth.routes())
 app.use(userRoutes.routes())
+app.use(accountRoutes.routes())
 
 // Run the server
 const PORT = process.env.PORT || 3000
