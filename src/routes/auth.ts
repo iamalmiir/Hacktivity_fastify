@@ -13,7 +13,7 @@ _.post(
     // If authentication succeeded send success message to the client
     ctx.body = {
       success: true,
-      message: 'Successfully logged in',
+      message: "You've been logged in!",
     }
 
     await next()
@@ -24,16 +24,21 @@ _.post(
 _.get('/logout', async (ctx, next) => {
   // If user is authenticated log them out and send success message to the client
   // Otherwise send failed message to the client
-  if (ctx.isAuthenticated()) {
-    ctx.logout()
-    ctx.body = {
-      success: true,
-      message: 'Successfully logged out',
+
+  try {
+    if (ctx.isAuthenticated()) {
+      ctx.logOut()
+      ctx.body = {
+        success: true,
+        message: "You've been logged out!",
+      }
+    } else {
+      throw new Error()
     }
-  } else {
+  } catch (err) {
     ctx.body = {
       success: false,
-      message: 'Failed to logout',
+      message: "Uh oh, that didn't work!",
     }
   }
 
@@ -44,9 +49,10 @@ _.get('/logout', async (ctx, next) => {
 _.get('/failed/auth', async (ctx, next) => {
   ctx.body = {
     success: false,
-    message: 'Failed to authenticate',
+    message: "Uh oh, that did't work! Please check your info.",
   }
 
   await next()
 })
+
 export default _

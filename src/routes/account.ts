@@ -1,11 +1,17 @@
 import Router from 'koa-router'
-import { UserInfo } from '../types/UserTypes'
-import { prisma, registerValidator, hashPassword } from '@common/index'
+import { UserInfo } from '@common/types/UserTypes'
+import { ProfileTypes } from '@common/types/ProfileTypes'
+import {
+  prisma,
+  registerValidator,
+  profileValidator,
+  hashPassword,
+} from '@common/index'
 
 const _ = new Router()
 
 /*
-  * Register route
+  * Register an account route
   @POST /account/register
 
   @body name: string
@@ -121,6 +127,51 @@ _.delete('/account/delete', async (ctx, next) => {
   }
 
   // Continue with the request
+  await next()
+})
+
+/*
+  * Create a profile route
+  @POST /account/profile/create
+
+  @body bio: string?
+
+*/
+_.post('/account/profile/create', async (ctx, next) => {
+  try {
+    if (ctx.isAuthenticated()) {
+      // Validate request body using using Joi @common/validators.ts
+      const { error } = profileValidator.validate(ctx.request.body)
+      if (error) {
+        throw new Error(
+          'Please ensure all required fields are filled in with valid data. If issues persist, contact support.'
+        )
+      }
+      // Extract profile info from request body
+      const { bio } = ctx.request.body as ProfileTypes
+      // Create a new profile
+      await prisma.profile.create({
+        data: {
+          bio: bio,
+          userId: ctx.state.user.id,
+        },
+      })
+      // Send success message to the client
+      ctx.body = {
+        success: true,
+        message: 'Your profile has been created!',
+      }
+
+      return
+    } else {
+      throw new Error("Uh oh, that didn't work!")
+    }
+  } catch (err) {
+    ctx.body = {
+      success: false,
+      message: err,
+    }
+  }
   await next()
 })
 

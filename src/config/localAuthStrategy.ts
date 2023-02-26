@@ -1,11 +1,15 @@
 import passport from 'koa-passport'
 import prisma from '@common/db'
 import { Strategy as LocalStrategy } from 'passport-local'
-import { comparePassword } from '@common/encrypt'
+import { comparePassword, loginValidator } from '@common/index'
+import { UserInfo } from '@common/types/UserTypes'
 
 // Serialize user
-passport.serializeUser((user: any, done) => {
-  done(null, user.id)
+passport.serializeUser((user, done) => {
+  // Extract user id from user object
+  const { id } = user as UserInfo
+  // Return user id
+  done(null, id)
 })
 
 // Deserialize user
@@ -34,15 +38,21 @@ passport.use(
   new LocalStrategy(
     {
       // Set username field to email or username
-      usernameField: 'username',
+      usernameField: 'email',
       passwordField: 'password',
     },
-    async (username, password, done) => {
+    async (email, password, done) => {
+      // Validate login data
+      const { error } = loginValidator.validate({ email, password })
+      if (error) {
+        return done(null, false)
+      }
+
       try {
         // Find user in database by email
         const user = await prisma.user.findUnique({
           where: {
-            username,
+            email,
           },
         })
 
