@@ -85,6 +85,9 @@ _.put(API_PATH, async (ctx, next) => {
       if (!user) {
         throw 'User not found!'
       }
+    } else {
+      // If user is not authenticated send failed message to the client
+      throw 'User not authenticated!'
     }
 
     // Validate request body using using Joi @common/validators.ts
@@ -129,9 +132,9 @@ _.put(API_PATH, async (ctx, next) => {
         id: ctx.state.user.id,
       },
       data: {
-        name: name && name,
-        email: email && email,
-        username: username && username,
+        name: name,
+        email: email,
+        username: username,
         password: password && (await hashPassword(password)),
       },
     })
@@ -142,6 +145,62 @@ _.put(API_PATH, async (ctx, next) => {
     }
   } catch (err) {
     // Send error message to the client
+    ctx.body = {
+      success: false,
+      message: err,
+    }
+  }
+
+  await next()
+})
+
+/*
+  * Delete user route
+  @DELETE /auth/user/me
+
+*/
+_.delete(API_PATH, async (ctx, next) => {
+  // Allow only authenticated users to access this route
+  if (!ctx.isAuthenticated()) {
+    ctx.redirect('/failed/auth')
+    return
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: ctx.state.user.id,
+      },
+    })
+
+    // If user doesn't exist send error message to the client
+    if (!user) {
+      throw "Couldn't find user"
+    }
+
+    // Delete user profile from the database
+    await prisma.profile.delete({
+      where: {
+        userId: ctx.state.user.id,
+      },
+    })
+
+    // Delete user from the database including their posts and profile
+    await prisma.user.delete({
+      where: {
+        id: ctx.state.user.id,
+      },
+    })
+
+    // Log user out of the session
+    ctx.logout()
+    // Send success message to the client
+    ctx.body = {
+      success: true,
+      message: 'Successfully deleted account',
+    }
+  } catch (err) {
+    // If something went wrong send error message to the client
     ctx.body = {
       success: false,
       message: err,
