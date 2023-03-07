@@ -5,4 +5,5 @@ export {
   loginValidator,
   profileValidator,
   userUpdateValidator,
+  postValidator,
 } from '@common/validators'

@@ -1,15 +1,15 @@
 import Router from 'koa-router'
 import prisma from '@common/db'
 
-import { userUpdateValidator, hashPassword } from '@common/index'
-import { UserInfo } from '@common/types/UserTypes'
+import { userUpdateValidator, hashPassword, postValidator } from '@common/index'
+import { UserInfo, PostTypes } from '@common/types/UserTypes'
 
 const _ = new Router()
 // API ENDPOINTS
 const API_PATH = '/auth/user/me'
 
 /*
-  * Get user info route
+  * Get user info
   @GET /auth/user/me
 
   @body name: string
@@ -63,7 +63,7 @@ _.get(API_PATH, async (ctx, next) => {
 })
 
 /*
-  * Update user info route
+  * Update user info
   @PUT /auth/user/me
 
   @body name: string
@@ -155,7 +155,7 @@ _.put(API_PATH, async (ctx, next) => {
 })
 
 /*
-  * Delete user route
+  * Delete user
   @DELETE /auth/user/me
 
 */
@@ -207,6 +207,54 @@ _.delete(API_PATH, async (ctx, next) => {
     }
   }
 
+  await next()
+})
+
+/*
+    * Create a post
+    @POST /auth/user/post/me
+
+    @body title: string
+    @body content: string
+*/
+const PATH = '/auth/user/post/me'
+_.post(PATH, async (ctx, next) => {
+  if (ctx.isAuthenticated()) {
+    try {
+      // Validate request body
+      const { error } = postValidator.validate(ctx.request.body)
+
+      if (error) {
+        throw 'Invalid request body!'
+      }
+      // Destructure request body
+      const { title, content } = ctx.request.body as PostTypes
+      // Create post in database
+      await prisma.post.create({
+        data: {
+          title: title,
+          content: content,
+          authorId: ctx.state.user.id,
+        },
+      })
+
+      // Send success message to the client
+      ctx.body = {
+        success: true,
+        message: 'Successfully created post',
+      }
+    } catch (err) {
+      ctx.body = {
+        success: false,
+        message: err,
+      }
+    }
+  } else {
+    ctx.body = {
+      success: false,
+      message: "Uh oh, that didn't work!",
+    }
+  }
   await next()
 })
 

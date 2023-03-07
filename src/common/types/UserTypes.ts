@@ -12,3 +12,9 @@ export interface UserProfile {
   user: UserInfo
   userId: string
 }
+
+export interface PostTypes {
+  title: string
+  content: string
+  authorId: string
+}

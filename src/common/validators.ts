@@ -1,6 +1,6 @@
 import * as Joi from 'joi'
 
-// Define Joi schema for user registration
+// Joi schema for user registration
 export const registerValidator = Joi.object({
   name: Joi.string().required(),
   email: Joi.string()
@@ -20,7 +20,7 @@ export const userUpdateValidator = Joi.object({
   password: Joi.string().min(8),
 })
 
-// Define Joi schema for user login
+// Joi schema for user login
 export const loginValidator = Joi.object({
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
@@ -28,7 +28,13 @@ export const loginValidator = Joi.object({
   password: Joi.string().min(8).required(),
 })
 
-// Define Joi schema for user profile
+// Joi schema for user profile
 export const profileValidator = Joi.object({
   bio: Joi.string().min(5),
+})
+
+// Joi shcema for Create Post
+export const postValidator = Joi.object({
+  title: Joi.string().min(5).required(),
+  content: Joi.string().min(5).required(),
 })
