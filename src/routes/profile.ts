@@ -152,4 +152,4 @@ _.delete('/account/profile', async (ctx, next) => {
   await next()
 })
 
-export default _
+export default _.routes()

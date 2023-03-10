@@ -1,9 +1,9 @@
-import Router from 'koa-router'
-import prisma from '@common/db'
 import slugify from 'slugify'
+import Router from 'koa-router'
 
-import { userUpdateValidator, hashPassword, postValidator } from '@common/index'
+import prisma from '@common/db'
 import { UserInfo, PostTypes } from '@common/types/UserTypes'
+import { userUpdateValidator, hashPassword, postValidator } from '@common/index'
 
 const _ = new Router()
 // API ENDPOINTS
@@ -420,4 +420,4 @@ _.delete(`${PATH}/:slug`, async (ctx, next) => {
   await next()
 })
 
-export default _
+export default _.routes()

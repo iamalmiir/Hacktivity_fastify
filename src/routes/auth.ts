@@ -24,21 +24,18 @@ _.post(
 _.get('/logout', async (ctx, next) => {
   // If user is authenticated log them out and send success message to the client
   // Otherwise send failed message to the client
-
-  try {
-    if (ctx.isAuthenticated()) {
+  if (ctx.isAuthenticated()) {
+    try {
       ctx.logOut()
       ctx.body = {
         success: true,
         message: "You've been logged out!",
       }
-    } else {
-      throw new Error()
-    }
-  } catch (err) {
-    ctx.body = {
-      success: false,
-      message: "Uh oh, that didn't work!",
+    } catch (err) {
+      ctx.body = {
+        success: false,
+        message: "Uh oh, that didn't work!",
+      }
     }
   }
 
@@ -55,4 +52,4 @@ _.get('/failed/auth', async (ctx, next) => {
   await next()
 })
 
-export default _
+export default _.routes()

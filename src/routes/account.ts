@@ -74,4 +74,4 @@ _.post('/account/register', async (ctx, next) => {
   await next()
 })
 
-export default _
+export default _.routes()
