@@ -15,7 +15,7 @@
       "@common/*": ["common/*"],
       "@config/*": ["config/*"],
       "@routes/*": ["routes/*"],
-      "@utils/*": ["libs/*"]
+      "@utils/*": ["utils/*"]
     }
   },
 

@@ -1,8 +1,12 @@
 import Router from 'koa-router'
+
+import { exclude } from '@utils/exclude'
 import { ProfileTypes } from '@common/types/ProfileTypes'
 import { prisma, profileValidator } from '@common/index'
 
 const _ = new Router()
+
+const API_PATH = '/account/profile'
 
 /*
   * Create a profile route
@@ -11,7 +15,7 @@ const _ = new Router()
   @body bio: string?
 
 */
-_.post('/account/profile', async (ctx, next) => {
+_.post(API_PATH, async (ctx, next) => {
   try {
     if (ctx.isAuthenticated()) {
       // Validate request body using using Joi @common/validators.ts
@@ -46,13 +50,52 @@ _.post('/account/profile', async (ctx, next) => {
 })
 
 /*
+  * Get a profile route
+  @GET /account/profile
+
+*/
+_.get(API_PATH, async (ctx, next) => {
+  try {
+    // Allow only authenticated users to access this route
+    if (ctx.isAuthenticated()) {
+      const profile = await prisma.profile.findUnique({
+        where: {
+          userId: ctx.state.user.id,
+        },
+      })
+      // If profile doesn't exist send error message to the client
+      if (!profile) {
+        throw "Couldn't find profile"
+      }
+
+      // Send success message to the client
+      ctx.body = {
+        success: true,
+        message: 'Successfully fetched profile',
+        profile: {
+          bio: profile.bio,
+        },
+      }
+    } else {
+      throw "Uh oh, that didn't work!"
+    }
+  } catch (err) {
+    ctx.body = {
+      success: false,
+      message: err,
+    }
+  }
+  await next()
+})
+
+/*
   * Update a profile route
   @PUT /account/profile
 
   @body bio: string
 
 */
-_.put('/account/profile', async (ctx, next) => {
+_.put(API_PATH, async (ctx, next) => {
   // Allow only authenticated users to access this route
   if (!ctx.isAuthenticated()) {
     ctx.redirect('/failed/auth')
@@ -110,7 +153,7 @@ _.put('/account/profile', async (ctx, next) => {
   @DELETE /account/profile
 
 */
-_.delete('/account/profile', async (ctx, next) => {
+_.delete(API_PATH, async (ctx, next) => {
   // Allow only authenticated users to access this route
   if (!ctx.isAuthenticated()) {
     ctx.redirect('/failed/auth')
