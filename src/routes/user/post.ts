@@ -2,12 +2,12 @@ import Router from 'koa-router'
 import slugify from 'slugify'
 
 import prisma from '@common/db'
-
 import { postValidator } from '@utils/index'
 import { PostTypes } from '@common/types/UserTypes'
 
 const _ = new Router()
 const API_PATH = '/auth/user/post/me'
+const LIKE_API_PATH = '/auth/user/post/like/:slug'
 
 /*
     * Create a post
@@ -43,13 +43,25 @@ _.post(API_PATH, async (ctx, next) => {
       }
       // Destructure request body
       const { title, content } = ctx.request.body as PostTypes
+      let slug = slugify(title, {
+        lower: true,
+        strict: true,
+      })
+
+      let counter = 0
+      // Check if slug already exists
+      while (await prisma.post.findUnique({ where: { slug: slug } })) {
+        slug = slugify(title + counter, {
+          lower: true,
+          strict: true,
+        })
+        counter++
+      }
+
       // Create post in database
       await prisma.post.create({
         data: {
-          slug: slugify(title, {
-            lower: true,
-            strict: true,
-          }),
+          slug: slug,
           title: title,
           content: content,
           published: true,
@@ -178,10 +190,59 @@ _.delete(`${API_PATH}/:slug`, async (ctx, next) => {
     } catch (err) {
       ctx.body = {
         success: false,
-        message: 'Something went wrong!',
+        message: err,
       }
     }
   }
+  await next()
+})
+
+/*
+    * Like a post
+   
+    @param slug: string
+
+*/
+_.post(`${LIKE_API_PATH}`, async (ctx, next) => {
+  // If user is authenticated continue with the request
+  if (ctx.isAuthenticated()) {
+    try {
+      if (!ctx.state.user) {
+        throw "Make sure you're logged in!"
+      }
+
+      // Find post in database by slug
+      const post = await prisma.post.findUnique({
+        where: {
+          slug: ctx.params.slug,
+        },
+      })
+
+      if (!post) {
+        throw 'Post not found!'
+      }
+
+      // Create like in database
+      await prisma.like.create({
+        data: {
+          postId: post.id,
+          userId: ctx.state.user.id,
+        },
+      })
+
+      // Send success message to the client
+      ctx.body = {
+        success: true,
+        message: 'Successfully liked post',
+      }
+    } catch (err) {
+      ctx.body = {
+        success: false,
+        message: err,
+      }
+    }
+  }
+
   await next()
 })
 
