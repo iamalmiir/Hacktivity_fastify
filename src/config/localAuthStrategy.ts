@@ -1,7 +1,7 @@
 import passport from 'koa-passport'
 import prisma from '@common/db'
 import { Strategy as LocalStrategy } from 'passport-local'
-import { comparePassword, loginValidator } from '@common/index'
+import { comparePassword, loginValidator } from '@utils/index'
 import { UserInfo } from '@common/types/UserTypes'
 
 // Serialize user

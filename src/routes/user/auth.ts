@@ -1,8 +1,9 @@
 import Router from 'koa-router'
 import passport from 'koa-passport'
 
+import prisma from '@common/db'
 import { UserInfo } from '@common/types/UserTypes'
-import { prisma, registerValidator, hashPassword } from '@common/index'
+import { registerValidator, hashPassword } from '@utils/index'
 
 const _ = new Router()
 

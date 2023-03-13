@@ -3,7 +3,7 @@ import slugify from 'slugify'
 
 import prisma from '@common/db'
 
-import { postValidator } from '@common/index'
+import { postValidator } from '@utils/index'
 import { PostTypes } from '@common/types/UserTypes'
 
 const _ = new Router()

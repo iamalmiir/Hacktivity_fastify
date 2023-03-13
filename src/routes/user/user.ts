@@ -3,7 +3,7 @@ import Router from 'koa-router'
 import prisma from '@common/db'
 import { exclude } from '@utils/exclude'
 import { UserInfo } from '@common/types/UserTypes'
-import { userUpdateValidator, hashPassword } from '@common/index'
+import { userUpdateValidator, hashPassword } from '@utils/index'
 
 const _ = new Router()
 // API ENDPOINTS

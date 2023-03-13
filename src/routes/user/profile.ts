@@ -1,8 +1,8 @@
 import Router from 'koa-router'
 
-import { exclude } from '@utils/exclude'
+import prisma from '@common/db'
+import { profileValidator } from '@utils/index'
 import { ProfileTypes } from '@common/types/ProfileTypes'
-import { prisma, profileValidator } from '@common/index'
 
 const _ = new Router()
 
