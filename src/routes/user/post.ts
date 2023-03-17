@@ -207,10 +207,6 @@ _.post(`${LIKE_API_PATH}`, async (ctx, next) => {
   // If user is authenticated continue with the request
   if (ctx.isAuthenticated()) {
     try {
-      if (!ctx.state.user) {
-        throw "Make sure you're logged in!"
-      }
-
       // Find post in database by slug
       const post = await prisma.post.findUnique({
         where: {
@@ -243,6 +239,35 @@ _.post(`${LIKE_API_PATH}`, async (ctx, next) => {
     }
   }
 
+  await next()
+})
+
+/*
+  * Remove the like
+ 
+  @param slug: string
+
+*/
+_.delete(`${LIKE_API_PATH}`, async (ctx, next) => {
+  if (ctx.isAuthenticated()) {
+    try {
+      // Find post in database by slug
+      const post = await prisma.post.findUnique({
+        where: {
+          slug: ctx.params.slug,
+        },
+      })
+
+      if (!post) {
+        throw 'Post not found!'
+      }
+    } catch (err) {
+      ctx.body = {
+        success: false,
+        message: err,
+      }
+    }
+  }
   await next()
 })
 
