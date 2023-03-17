@@ -218,13 +218,27 @@ _.post(`${LIKE_API_PATH}`, async (ctx, next) => {
         throw 'Post not found!'
       }
 
-      // Create like in database
-      await prisma.like.create({
-        data: {
-          postId: post.id,
-          userId: ctx.state.user.id,
+      // Check if user has already liked the post
+      const likedPost = await prisma.post.findFirst({
+        where: {
+          id: post.id,
+          likes: {
+            some: {
+              id: ctx.state.user.id,
+            },
+          },
         },
       })
+
+      if (likedPost) {
+        throw 'You have already liked this post!'
+      }
+
+      /*
+       TODO: Check if user has already liked the post
+       TODO: If user has already liked the post throw an error
+       TODO: If user has not liked the post create a like in the database
+       */
 
       // Send success message to the client
       ctx.body = {
@@ -260,6 +274,30 @@ _.delete(`${LIKE_API_PATH}`, async (ctx, next) => {
 
       if (!post) {
         throw 'Post not found!'
+      }
+
+      // Delete like in database
+      const like = await prisma.like.findFirst({
+        where: {
+          postId: post.id,
+          userId: ctx.state.user.id,
+        },
+      })
+
+      if (!like) {
+        throw 'Like not found!'
+      }
+
+      await prisma.like.delete({
+        where: {
+          id: like.id,
+        },
+      })
+
+      // Send success message to the client
+      ctx.body = {
+        success: true,
+        message: 'Successfully unliked post',
       }
     } catch (err) {
       ctx.body = {
