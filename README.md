@@ -1,5 +1,7 @@
 # Hacktivity
 
+Hacktivity is a dev blog that allows users to register, log in, create, delete, or update their profiles, as well as comment and like posts. The project is built using TypeScript, Koa.js, and joi for validation, bcryptjs for password hashing, sessions for authentication, Prisma for database queries, and slugify and uuid for generating URLs and unique identifiers. This project provides a seamless and secure experience for users to engage with content and connect with like-minded individuals in the tech community.
+
 ## Getting Started
 
 ### Prerequisites
