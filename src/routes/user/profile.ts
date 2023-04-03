@@ -95,7 +95,7 @@ _.get(API_PATH, async (ctx, next) => {
   @body bio: string
 
 */
-_.put(API_PATH, async (ctx, next) => {
+_.patch(API_PATH, async (ctx, next) => {
   // Allow only authenticated users to access this route
   if (!ctx.isAuthenticated()) {
     ctx.redirect('/failed/auth')

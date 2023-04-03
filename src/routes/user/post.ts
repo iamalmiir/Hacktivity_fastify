@@ -96,7 +96,7 @@ _.post(API_PATH, async (ctx, next) => {
      @body content: string
   
   */
-_.put(`${API_PATH}/:slug`, async (ctx, next) => {
+_.patch(`${API_PATH}/:slug`, async (ctx, next) => {
   if (ctx.isAuthenticated()) {
     try {
       const { slug } = ctx.params

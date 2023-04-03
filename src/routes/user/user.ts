@@ -54,14 +54,14 @@ _.get(API_PATH, async (ctx, next) => {
 
 /*
   * Update user info
-  @PUT /auth/user/me
+  @PATCH /auth/user/me
 
   @body name: string
   @body email: string
   @body password: string
 
 */
-_.put(API_PATH, async (ctx, next) => {
+_.patch(API_PATH, async (ctx, next) => {
   try {
     // If user is authenticated continue with the request
     if (ctx.isAuthenticated()) {
