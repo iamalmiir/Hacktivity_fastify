@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2022",
+    "noImplicitAny": true,
+    "outDir": "./dist",
+    "allowJs": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "strict": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@types/*": ["src/types/*"],
+      "@common/*": ["src/common/*"],
+      "@config/*": ["src/config/*"],
+      "@routes/*": ["src/routes/*"],
+      "@utils/*": ["src/utils/*"]
+    }
+  },
+
+  "include": ["src/**/*", "src/server.ts"],
+  "exclude": ["node_modules"]
+}

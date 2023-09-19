@@ -1,0 +1,32 @@
+{
+  "name": "secureblog",
+  "version": "1.0.0",
+  "main": "server.js",
+  "prisma": {
+    "schema": "./src/prisma/schema.prisma"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prestart": "rm -rf dist && yarn build",
+    "start": "node -r ./tsconfig-paths-bootstrap.js dist/app.js",
+    "dev": "nodemon --watch './src/**/*' -e ts,tsx --exec ts-node -r tsconfig-paths/register ./src/app.ts"
+  },
+  "dependencies": {
+    "@fastify/helmet": "^11.1.1",
+    "@fastify/secure-session": "^7.1.0",
+    "@prisma/client": "^5.3.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.23.2",
+    "joi": "^17.10.2",
+    "prisma": "^5.3.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.4",
+    "@types/node": "^20.6.2",
+    "concurrently": "^8.2.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.2.2"
+  }
+}
